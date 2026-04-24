@@ -11,12 +11,12 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/auth", require("../server/routes/auth"));
-app.use("/api/entrepreneurs", require("../server/routes/entrepreneurs"));
-app.use("/api/products", require("../server/routes/products"));
-app.use("/api/orders", require("../server/routes/orders"));
-app.use("/api/admin", require("../server/routes/admin"));
-app.use("/api/reviews", require("../server/routes/reviews"));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/entrepreneurs", require("./routes/entrepreneurs"));
+app.use("/api/products", require("./routes/products"));
+app.use("/api/orders", require("./routes/orders"));
+app.use("/api/admin", require("./routes/admin"));
+app.use("/api/reviews", require("./routes/reviews"));
 
 // Health check
 app.get("/", (req, res) => {
