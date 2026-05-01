@@ -12,21 +12,21 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-indigo-700 to-indigo-500 text-white py-20 px-6 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Discover Local Talent. <br /> Support Local Skills.
+      <section className="bg-gradient-to-br from-indigo-700 to-indigo-500 text-white py-16 md:py-20 px-6 text-center">
+        <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
+          Discover Local Talent. <br className="hidden md:block" /> Support Local Skills.
         </h1>
         <p className="text-lg text-indigo-100 mb-8 max-w-2xl mx-auto">
           HunarHub connects you with skilled local micro-entrepreneurs — cobblers, potters,
           tailors, artisans, and more. Browse, book, and buy locally.
         </p>
-        <div className="flex gap-4 justify-center flex-wrap">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/browse"
-            className="bg-white text-indigo-700 font-semibold px-8 py-3 rounded-full hover:bg-indigo-50 transition text-lg">
+            className="bg-white text-indigo-700 font-semibold px-8 py-3 rounded-full hover:bg-indigo-50 transition text-lg w-full sm:w-auto">
             Browse Entrepreneurs
           </Link>
           <Link to="/register"
-            className="border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-indigo-600 transition text-lg">
+            className="border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-indigo-600 transition text-lg w-full sm:w-auto">
             Join as Entrepreneur
           </Link>
         </div>
@@ -72,12 +72,12 @@ export default function Home() {
 
       {/* CTA */}
       <section className="py-16 px-6 text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">Are you a local entrepreneur?</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Are you a local entrepreneur?</h2>
         <p className="text-gray-500 mb-8 max-w-xl mx-auto">
           Register your business on HunarHub and reach thousands of customers looking for your skills.
         </p>
         <Link to="/register"
-          className="bg-indigo-600 text-white font-semibold px-10 py-3 rounded-full hover:bg-indigo-700 transition text-lg">
+          className="bg-indigo-600 text-white font-semibold px-8 md:px-10 py-3 rounded-full hover:bg-indigo-700 transition text-lg block sm:inline-block">
           Get Started for Free
         </Link>
       </section>

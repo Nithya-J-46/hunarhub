@@ -90,9 +90,9 @@ export default function Dashboard() {
   const statusColors = { pending: 'bg-yellow-100 text-yellow-700', accepted: 'bg-green-100 text-green-700', rejected: 'bg-red-100 text-red-700', completed: 'bg-blue-100 text-blue-700' }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Entrepreneur Dashboard</h1>
+    <div className="max-w-5xl mx-auto px-4 py-8 md:py-10">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Entrepreneur Dashboard</h1>
         {profile && <span className={`px-3 py-1 rounded-full text-sm font-medium ${profile.isVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
           {profile.isVerified ? '✅ Verified' : '⏳ Pending Verification'}
         </span>}
@@ -186,14 +186,14 @@ export default function Dashboard() {
             </div>
           ) : requests.map(r => (
             <div key={r._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                 <div>
                   <p className="font-semibold text-gray-800">{r.customer?.name}</p>
                   <p className="text-sm text-gray-500">{r.customer?.email}</p>
                   <p className="text-gray-700 mt-2">{r.description}</p>
                   <p className="text-xs text-gray-400 mt-1">{new Date(r.createdAt).toLocaleDateString()}</p>
                 </div>
-                <span className={`text-xs px-3 py-1 rounded-full font-medium ${statusColors[r.status]}`}>{r.status}</span>
+                <span className={`text-xs px-3 py-1 rounded-full font-medium self-start sm:self-auto ${statusColors[r.status]}`}>{r.status}</span>
               </div>
               {r.status === 'pending' && (
                 <div className="mt-3 flex gap-2">
@@ -222,21 +222,21 @@ export default function Dashboard() {
             </div>
           ) : productOrders.map(o => (
             <div key={o._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                 <div className="flex items-start gap-4">
                   {o.product?.image ? (
                     <img src={o.product.image} alt={o.product?.name} className="w-16 h-16 rounded-lg object-cover" />
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-indigo-50 flex items-center justify-center text-xl">🎨</div>
+                    <div className="w-16 h-16 rounded-lg bg-indigo-50 flex items-center justify-center text-xl shrink-0">🎨</div>
                   )}
                   <div>
                     <p className="font-semibold text-gray-800">{o.product?.name}</p>
-                    <p className="text-sm text-gray-500">Buyer: {o.customer?.name} ({o.customer?.email})</p>
+                    <p className="text-sm text-gray-500">Buyer: {o.customer?.name} <span className="hidden sm:inline">({o.customer?.email})</span></p>
                     <p className="text-gray-700 mt-1 font-medium">Qty: {o.quantity} | Earnings: ₹{o.totalPrice}</p>
                     <p className="text-xs text-gray-400 mt-1">{new Date(o.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>
-                <span className={`text-xs px-3 py-1 rounded-full font-medium ${statusColors[o.status] || 'bg-gray-100'}`}>{o.status}</span>
+                <span className={`text-xs px-3 py-1 rounded-full font-medium self-start sm:self-auto ${statusColors[o.status] || 'bg-gray-100'}`}>{o.status}</span>
               </div>
               {o.status === 'pending' && (
                 <button onClick={() => updateProductOrderStatus(o._id, 'shipped')}

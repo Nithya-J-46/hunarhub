@@ -59,14 +59,14 @@ export default function CustomerDashboard() {
             </div>
           ) : requests.map(r => (
             <div key={r._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                 <div>
                   <p className="font-semibold text-gray-800">To: {r.entrepreneur?.businessName}</p>
                   <p className="text-sm text-gray-500">{r.entrepreneur?.category} · {r.entrepreneur?.location}</p>
                   <p className="text-gray-700 mt-2">{r.description}</p>
                   <p className="text-xs text-gray-400 mt-1">{new Date(r.createdAt).toLocaleDateString()}</p>
                 </div>
-                <span className={`text-xs px-3 py-1 rounded-full font-medium ${statusColors[r.status]}`}>{r.status}</span>
+                <span className={`text-xs px-3 py-1 rounded-full font-medium self-start sm:self-auto ${statusColors[r.status]}`}>{r.status}</span>
               </div>
             </div>
           ))}
@@ -83,12 +83,12 @@ export default function CustomerDashboard() {
             </div>
           ) : orders.map(o => (
             <div key={o._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                 <div className="flex items-start gap-4">
                   {o.product?.image ? (
                     <img src={o.product.image} alt={o.product?.name} className="w-16 h-16 rounded-lg object-cover" />
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-indigo-50 flex items-center justify-center text-xl">🎨</div>
+                    <div className="w-16 h-16 rounded-lg bg-indigo-50 flex items-center justify-center text-xl shrink-0">🎨</div>
                   )}
                   <div>
                     <p className="font-semibold text-gray-800">{o.product?.name}</p>
@@ -97,7 +97,7 @@ export default function CustomerDashboard() {
                     <p className="text-xs text-gray-400 mt-1">{new Date(o.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>
-                <span className={`text-xs px-3 py-1 rounded-full font-medium ${statusColors[o.status]}`}>{o.status}</span>
+                <span className={`text-xs px-3 py-1 rounded-full font-medium self-start sm:self-auto ${statusColors[o.status]}`}>{o.status}</span>
               </div>
             </div>
           ))}
