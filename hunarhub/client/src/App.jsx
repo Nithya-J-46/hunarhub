@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import Browse from './pages/Browse'
 import EntrepreneurProfile from './pages/EntrepreneurProfile'
 import Dashboard from './pages/Dashboard'
+import CustomerDashboard from './pages/CustomerDashboard'
 import AdminPanel from './pages/AdminPanel'
 import Products from './pages/Products'
 
@@ -32,6 +33,9 @@ export default function App() {
           <Route path="/entrepreneur/:id" element={<EntrepreneurProfile />} />
           <Route path="/dashboard" element={
             <ProtectedRoute role="entrepreneur"><Dashboard /></ProtectedRoute>
+          } />
+          <Route path="/my-dashboard" element={
+            <ProtectedRoute role="customer"><CustomerDashboard /></ProtectedRoute>
           } />
           <Route path="/admin" element={
             <ProtectedRoute role="admin"><AdminPanel /></ProtectedRoute>

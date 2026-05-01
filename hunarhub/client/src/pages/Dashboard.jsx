@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [profile, setProfile] = useState(null)
   const [requests, setRequests] = useState([])
   const [products, setProducts] = useState([])
+  const [productOrders, setProductOrders] = useState([])
   const [tab, setTab] = useState('profile')
   const [form, setForm] = useState({ businessName: '', category: 'Cobbler', skills: '', location: '', description: '', pricing: '', availability: true })
   const [productForm, setProductForm] = useState({ name: '', description: '', price: '', stock: 1, image: '' })
@@ -24,7 +25,8 @@ export default function Dashboard() {
           setForm({ ...res.data, skills: res.data.skills?.join(', ') || '' })
           return Promise.all([
             axios.get(`/api/orders/entrepreneur/${res.data._id}`),
-            axios.get(`/api/products?entrepreneur=${res.data._id}`)
+            axios.get(`/api/products?entrepreneur=${res.data._id}`),
+            axios.get(`/api/orders/entrepreneur-products/${res.data._id}`)
           ])
         }
       })
@@ -32,6 +34,7 @@ export default function Dashboard() {
         if (results) {
           setRequests(results[0].data)
           setProducts(results[1].data)
+          setProductOrders(results[2].data)
         }
       })
       .finally(() => setLoading(false))
@@ -54,6 +57,17 @@ export default function Dashboard() {
   const updateRequestStatus = async (id, status) => {
     await axios.put(`/api/orders/${id}`, { status })
     setRequests(requests.map(r => r._id === id ? { ...r, status } : r))
+  }
+
+  const updateProductOrderStatus = async (id, status) => {
+    await axios.put(`/api/orders/product/${id}`, { status })
+    setProductOrders(productOrders.map(o => o._id === id ? { ...o, status } : o))
+    
+    // Refresh profile to get updated earnings if delivered
+    if (status === 'delivered') {
+      const res = await axios.get(`/api/entrepreneurs/by-user/${user.id}`)
+      setProfile(res.data)
+    }
   }
 
   const addProduct = async () => {
@@ -92,6 +106,7 @@ export default function Dashboard() {
             { label: 'Pending', value: requests.filter(r => r.status === 'pending').length, icon: '⏳' },
             { label: 'Products Listed', value: products.length, icon: '🎨' },
             { label: 'Rating', value: `${profile.rating || 0} ⭐`, icon: '⭐' },
+            { label: 'Earnings', value: `₹${profile.earnings || 0}`, icon: '💰' },
           ].map(stat => (
             <div key={stat.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
               <div className="text-2xl">{stat.icon}</div>
@@ -103,11 +118,11 @@ export default function Dashboard() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b">
-        {['profile', 'requests', 'products'].map(t => (
+      <div className="flex gap-2 mb-6 border-b overflow-x-auto whitespace-nowrap pb-1">
+        {['profile', 'requests', 'productOrders', 'products'].map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-5 py-2.5 font-medium text-sm capitalize border-b-2 transition ${tab === t ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
-            {t === 'profile' ? '👤 Profile' : t === 'requests' ? '📩 Requests' : '🎨 Products'}
+            {t === 'profile' ? '👤 Profile' : t === 'requests' ? '📩 Service Requests' : t === 'productOrders' ? '🛍️ Product Orders' : '🎨 Products'}
           </button>
         ))}
       </div>
@@ -191,6 +206,45 @@ export default function Dashboard() {
               {r.status === 'accepted' && (
                 <button onClick={() => updateRequestStatus(r._id, 'completed')}
                   className="mt-3 bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-600 transition">Mark Completed</button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Product Orders Tab */}
+      {tab === 'productOrders' && (
+        <div className="space-y-4">
+          {productOrders.length === 0 ? (
+            <div className="text-center py-16 text-gray-400">
+              <div className="text-4xl mb-3">🛍️</div>
+              <p>No product orders yet.</p>
+            </div>
+          ) : productOrders.map(o => (
+            <div key={o._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <div className="flex justify-between items-start">
+                <div className="flex items-start gap-4">
+                  {o.product?.image ? (
+                    <img src={o.product.image} alt={o.product?.name} className="w-16 h-16 rounded-lg object-cover" />
+                  ) : (
+                    <div className="w-16 h-16 rounded-lg bg-indigo-50 flex items-center justify-center text-xl">🎨</div>
+                  )}
+                  <div>
+                    <p className="font-semibold text-gray-800">{o.product?.name}</p>
+                    <p className="text-sm text-gray-500">Buyer: {o.customer?.name} ({o.customer?.email})</p>
+                    <p className="text-gray-700 mt-1 font-medium">Qty: {o.quantity} | Earnings: ₹{o.totalPrice}</p>
+                    <p className="text-xs text-gray-400 mt-1">{new Date(o.createdAt).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <span className={`text-xs px-3 py-1 rounded-full font-medium ${statusColors[o.status] || 'bg-gray-100'}`}>{o.status}</span>
+              </div>
+              {o.status === 'pending' && (
+                <button onClick={() => updateProductOrderStatus(o._id, 'shipped')}
+                  className="mt-4 bg-purple-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-purple-600 transition">Mark Shipped</button>
+              )}
+              {o.status === 'shipped' && (
+                <button onClick={() => updateProductOrderStatus(o._id, 'delivered')}
+                  className="mt-4 bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-green-600 transition">Mark Delivered</button>
               )}
             </div>
           ))}

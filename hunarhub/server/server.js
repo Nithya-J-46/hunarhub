@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -17,7 +18,20 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/reviews', require('./routes/reviews'));
 
 // Health check
-app.get('/', (req, res) => res.json({ message: 'HunarHub API Running ✅' }));
+app.get('/api/health', (req, res) => res.json({ message: 'HunarHub API Running ✅' }));
+
+// Serve Frontend in Production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...');
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 

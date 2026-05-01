@@ -1,0 +1,9 @@
+{
+  "name": "hunarhub",
+  "version": "1.0.0",
+  "description": "Railway deployment configuration",
+  "scripts": {
+    "build": "cd client && npm install && npm run build && cd ../server && npm install",
+    "start": "cd server && npm start"
+  }
+}

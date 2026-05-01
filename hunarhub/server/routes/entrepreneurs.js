@@ -5,10 +5,12 @@ const auth = require('../middleware/auth');
 // Get all verified entrepreneurs (with filters)
 router.get('/', async (req, res) => {
   try {
-    const { category, location } = req.query;
+    const { category, location, skills, pricing } = req.query;
     let query = { isVerified: true };
     if (category) query.category = category;
     if (location) query.location = new RegExp(location, 'i');
+    if (skills) query.skills = new RegExp(skills, 'i');
+    if (pricing) query.pricing = new RegExp(pricing, 'i');
     const list = await Entrepreneur.find(query).populate('user', 'name email');
     res.json(list);
   } catch (err) {

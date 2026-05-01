@@ -11,7 +11,9 @@ export default function Browse() {
   const [searchParams] = useSearchParams()
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || '',
-    location: ''
+    location: '',
+    skills: '',
+    pricing: ''
   })
 
   useEffect(() => {
@@ -19,6 +21,8 @@ export default function Browse() {
     const params = new URLSearchParams()
     if (filters.category) params.set('category', filters.category)
     if (filters.location) params.set('location', filters.location)
+    if (filters.skills) params.set('skills', filters.skills)
+    if (filters.pricing) params.set('pricing', filters.pricing)
     axios.get(`/api/entrepreneurs?${params.toString()}`)
       .then(res => setEntrepreneurs(res.data))
       .catch(() => setEntrepreneurs([]))
@@ -31,8 +35,8 @@ export default function Browse() {
       <p className="text-gray-500 mb-6">Discover skilled local micro-entrepreneurs near you</p>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-8 flex flex-wrap gap-4 items-center">
-        <div className="flex gap-2 flex-wrap">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-8">
+        <div className="flex gap-2 flex-wrap mb-4">
           {CATEGORIES.map(cat => (
             <button key={cat}
               onClick={() => setFilters({ ...filters, category: cat === 'All' ? '' : cat })}
@@ -45,13 +49,29 @@ export default function Browse() {
             </button>
           ))}
         </div>
-        <input
-          type="text"
-          placeholder="🔍 Search by location..."
-          className="ml-auto border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-          value={filters.location}
-          onChange={e => setFilters({ ...filters, location: e.target.value })}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            type="text"
+            placeholder="🔍 Location..."
+            className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            value={filters.location}
+            onChange={e => setFilters({ ...filters, location: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="🛠️ Skill (e.g. Leather)..."
+            className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            value={filters.skills}
+            onChange={e => setFilters({ ...filters, skills: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="💰 Price (e.g. 50)..."
+            className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            value={filters.pricing}
+            onChange={e => setFilters({ ...filters, pricing: e.target.value })}
+          />
+        </div>
       </div>
 
       {/* Results */}

@@ -21,6 +21,9 @@ export default function Navbar() {
           <Link to="/products" className="hover:text-indigo-200 transition">Products</Link>
           {user ? (
             <>
+              {user.role === 'customer' && (
+                <Link to="/my-dashboard" className="hover:text-indigo-200 transition">My Dashboard</Link>
+              )}
               {user.role === 'entrepreneur' && (
                 <Link to="/dashboard" className="hover:text-indigo-200 transition">Dashboard</Link>
               )}
